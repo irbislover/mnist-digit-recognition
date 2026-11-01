@@ -34,8 +34,9 @@ I keep the test in a separate script too. `test.py` loads the weights and runs o
 - `train.py` trains it and saves the weights.
 - `test.py` checks the saved model.
 - `requirements.txt` contains the dependencies.
+- `mnist_weights.pth` contains the trained weights used for the results above.
 
-The MNIST data and weights are excluded from Git. Both are created locally when you run training.
+The trained weights are included, so you can test the model right away. MNIST downloads to `data/` when needed and is kept out of the repository.
 
 ## Running the project
 
@@ -72,4 +73,4 @@ To test the saved weights later:
 python test.py
 ```
 
-Run training first: `test.py` needs `mnist_weights.pth`. Running `train.py` again starts from scratch and overwrites that file.
+`test.py` uses the included `mnist_weights.pth`, so training first is optional. Running `train.py` starts from scratch and overwrites that file.
