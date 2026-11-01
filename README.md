@@ -6,37 +6,17 @@ In my taxi fare project, I used a model with just a weight and a bias. Here I us
 
 ## The model
 
-Each MNIST image is 28 × 28 pixels. I flatten it into 784 values before passing it to the network:
+Each image is 28 × 28 pixels, flattened into 784 values:
 
 ```text
 Linear(784, 128) → ReLU → Linear(128, 10)
 ```
 
-The output contains 10 scores, one for each digit. The highest score gives the prediction.
+The network outputs a score for each digit. The highest score gives the prediction.
 
-## Training
+I train on 60,000 MNIST images for 5 epochs, using batches of 64, Adam with a learning rate of 0.001, and `CrossEntropyLoss`. The training data is shuffled each epoch.
 
-I train on 60,000 images in batches of 64, with the data shuffled each epoch. The model uses Adam with a learning rate of 0.001 and `CrossEntropyLoss`.
-
-Training takes 5 epochs. For each batch, the script makes predictions, calculates the loss, clears the old gradients, and updates the weights after `loss.backward()`.
-
-`train.py` prints loss and accuracy after each epoch. It then saves the weights to `mnist_weights.pth` and checks the model on 10,000 test images. Training uses CUDA if it's available, or the CPU otherwise.
-
-## Results
-
-The saved model reached 97.39% test accuracy: 9,739 correct predictions and 261 mistakes.
-
-I keep the test in a separate script too. `test.py` loads the weights and runs on the CPU, so I can check the model again without training it. A new training run may give a different result.
-
-## Project files
-
-- `model.py` defines the network.
-- `train.py` trains it and saves the weights.
-- `test.py` checks the saved model.
-- `requirements.txt` contains the dependencies.
-- `mnist_weights.pth` contains the trained weights used for the results above.
-
-The trained weights are included, so you can test the model right away. MNIST downloads to `data/` when needed and is kept out of the repository.
+The included weights achieved **97.39% accuracy** on 10,000 test images: 9,739 correct predictions and 261 mistakes. Results may vary after retraining.
 
 ## Running the project
 
@@ -52,25 +32,33 @@ Activate it in Windows PowerShell:
 .\.venv\Scripts\Activate.ps1
 ```
 
-On Linux or macOS:
+Or on Linux and macOS:
 
 ```bash
 source .venv/bin/activate
 ```
 
-Install the dependencies and train:
+Install the dependencies and test the included weights:
 
 ```bash
 python -m pip install -r requirements.txt
-python train.py
-```
-
-MNIST downloads to `data/` on the first run. You'll need an internet connection for that.
-
-To test the saved weights later:
-
-```bash
 python test.py
 ```
 
-`test.py` uses the included `mnist_weights.pth`, so training first is optional. Running `train.py` starts from scratch and overwrites that file.
+MNIST downloads to `data/` on the first run, which needs an internet connection. Testing runs on the CPU.
+
+To train your own model:
+
+```bash
+python train.py
+```
+
+Training uses CUDA when available, otherwise the CPU. It prints loss and accuracy after each epoch, saves the weights, then evaluates the model on the test set. Each run starts from scratch and overwrites `mnist_weights.pth`.
+
+## Project files
+
+- `model.py` defines the network.
+- `train.py` handles training and final evaluation.
+- `test.py` evaluates the saved weights.
+- `mnist_weights.pth` contains the trained weights.
+- `requirements.txt` lists the dependencies.
